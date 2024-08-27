@@ -13,6 +13,7 @@ class OthelloGame:
         self.board_size = 8
         self.board = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
         self.directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
+        self.current_player_idx = 0
 
     def show_menu(self):
         print("1. 게임을 시작한다.")
@@ -53,24 +54,42 @@ class OthelloGame:
             print(f"{i} " + " ".join(self.board[i]))
 
     def play_game(self):
-        current_player_idx = 0
-        while not self.is_game_over():
+        consecutive_passes = 0
+        
+        while consecutive_passes < len(self.players):
             self.print_board()
-            current_player = self.players[current_player_idx]
+            current_player = self.players[self.current_player_idx]
             print(f"{current_player.name} ({current_player.color}) 차례입니다.")
-            row, col = map(int, input("놓을 위치 (row col): ").split())
-            if self.is_valid_move(row, col, current_player.color):
-                self.place_stone(row, col, current_player.color)
-                current_player_idx = (current_player_idx + 1) % len(self.players)
+            
+            if self.has_valid_move(current_player.color):
+                row, col = map(int, input("놓을 위치 (row col): ").split())
+                if self.is_valid_move(row, col, current_player.color):
+                    self.place_stone(row, col, current_player.color)
+                    consecutive_passes = 0
+                else:
+                    print("잘못된 위치입니다. 다시 시도하세요.")
+                    continue
             else:
-                print("잘못된 위치입니다. 다시 시도하세요.")
+                print(f"{current_player.name}는 놓을 수 있는 자리가 없습니다. 패스합니다.")
+                consecutive_passes += 1
+            
+            self.current_player_idx = (self.current_player_idx + 1) % len(self.players)
         
         winner = self.calculate_winner()
-        winner.score += 1
-        print(f"{winner.name} ({winner.color})이 승리했습니다!")
+        if winner:
+            winner.score += 1
+            print(f"{winner.name} ({winner.color})이 승리했습니다!")
+        else:
+            print("무승부입니다!")
+
+    def has_valid_move(self, color):
+        for row in range(self.board_size):
+            for col in range(self.board_size):
+                if self.is_valid_move(row, col, color):
+                    return True
+        return False
 
     def is_valid_move(self, row, col, color):
-        # 빈 칸이어야 하고, 돌을 뒤집을 수 있는 방향이 있어야 함
         if self.board[row][col] != ' ':
             return False
         
@@ -115,7 +134,6 @@ class OthelloGame:
             y += dy
 
     def is_game_over(self):
-        # 보드에 빈칸이 없거나, 모든 플레이어가 더 이상 유효한 움직임을 할 수 없을 때 게임 종료
         for row in range(self.board_size):
             for col in range(self.board_size):
                 for player in self.players:
