@@ -1,10 +1,10 @@
 import pygame
 import sys
+import random
 
 # 색상 정의
 colors = {
     2: [(255, 0, 0), (0, 255, 0)],  # 빨강, 초록
-    3: [(255, 0, 0), (0, 255, 0), (128, 0, 128)],  # 빨강, 초록, 보라
     4: [(255, 0, 0), (0, 255, 0), (128, 0, 128), (255, 255, 0)]  # 빨강, 초록, 보라, 노랑
 }
 
@@ -24,13 +24,23 @@ pygame.display.set_caption('오셀로 게임')
 directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
 
 # 게임보드 초기화
-def initialize_board():
+def initialize_board(num_players):
     board = [[' ' for _ in range(board_size)] for _ in range(board_size)]
     mid = board_size // 2
-    board[mid - 1][mid - 1] = 'R'  # Red
-    board[mid - 1][mid] = 'G'  # Green
-    board[mid][mid - 1] = 'G'  # Green
-    board[mid][mid] = 'R'  # Red
+    
+    if num_players == 2:
+        # 2명일 경우 초기 배치 (빨강, 초록)
+        board[mid - 1][mid - 1] = 'R'  # Red
+        board[mid - 1][mid] = 'G'  # Green
+        board[mid][mid - 1] = 'G'  # Green
+        board[mid][mid] = 'R'  # Red
+    elif num_players == 4:
+        # 4명일 경우 초기 배치 (빨강, 초록, 보라, 노랑)
+        board[mid - 1][mid - 1] = 'R'  # Red
+        board[mid - 1][mid] = 'G'  # Green
+        board[mid][mid - 1] = 'P'  # Purple
+        board[mid][mid] = 'Y'  # Yellow
+    
     return board
 
 # 게임보드 그리기
@@ -101,9 +111,11 @@ def is_game_over(board):
                 return False
     return True
 
-# 플레이어 순환
-def get_next_player(current_idx, num_players):
-    return (current_idx + 1) % num_players
+# 플레이어 순환 (랜덤 시작)
+def determine_random_order(num_players):
+    players = list(range(num_players))
+    random.shuffle(players)
+    return players
 
 # 플레이어의 돌이 모두 사라졌는지 확인
 def has_no_stones(board, color):
@@ -141,20 +153,48 @@ def calculate_winner(board, player_colors):
     winner = max(scores, key=scores.get)
     return winner, scores[winner]
 
-def main():
-    num_players = int(input("플레이어 수를 입력하세요 (2, 3, 4명): "))
-    player_colors = 'RGBY'[:num_players]
-    current_player_idx = 0
-    current_color = player_colors[0]  # 첫 번째 플레이어는 빨간색으로 시작
+# 모든 플레이어가 놓을 수 없으면 패스 처리
+def all_players_passed(board, player_colors):
+    for color in player_colors:
+        for row in range(board_size):
+            for col in range(board_size):
+                if is_valid_move(board, row, col, color):
+                    return False
+    return True
 
+# 게임 리스타트
+def restart_game():
+    main()
+
+def main():
+    # 플레이어 수 설정 (2명 또는 4명만 허용)
+    num_players = 0
+    while num_players not in [2, 4]:
+        num_players = int(input("플레이어 수를 입력하세요 (2명 또는 4명만 가능): "))
+    
+    player_colors = 'RGBY'[:num_players]
+    
     # 게임보드 초기화
-    board = initialize_board()
+    board = initialize_board(num_players)
+    
+    # 랜덤한 순서로 시작
+    player_order = determine_random_order(num_players)
+    current_player_idx = 0
+    current_color = player_colors[player_order[current_player_idx]]  # 첫 번째 플레이어
 
     # 게임 루프
     running = True
     while running:
         draw_board(board)
         pygame.display.flip()
+
+        # 모든 플레이어가 돌을 놓을 수 없으면 패스
+        if all_players_passed(board, player_colors):
+            print("모든 플레이어가 돌을 놓을 수 없습니다. 게임 종료!")
+            winner, score = calculate_winner(board, player_colors)
+            print(f"{winner} 플레이어가 승리했습니다! 점수: {score}")
+            running = False
+            break
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -176,8 +216,8 @@ def main():
                         place_black_stone(board)
 
                     # 다음 플레이어로 전환
-                    current_player_idx = get_next_player(current_player_idx, num_players)
-                    current_color = player_colors[current_player_idx]
+                    current_player_idx = (current_player_idx + 1) % num_players
+                    current_color = player_colors[player_order[current_player_idx]]
 
                     # 게임 종료 확인
                     if is_game_over(board):
@@ -188,6 +228,11 @@ def main():
                         break
 
         pygame.time.Clock().tick(30)
+
+    # 게임 종료 후 리스타트 여부 확인
+    restart = input("게임을 다시 시작하시겠습니까? (y/n): ")
+    if restart.lower() == 'y':
+        restart_game()
 
     pygame.quit()
     sys.exit()
