@@ -1,6 +1,8 @@
 import pygame
 import sys
 import random
+import csv
+import os
 
 # 색상 정의
 colors = {
@@ -22,6 +24,20 @@ pygame.display.set_caption('오셀로 게임')
 
 # 방향 정의 (8방향)
 directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+# 플레이어 클래스 정의
+class Player:
+    def __init__(self, name, color):
+        self.name = name
+        self.color = color
+        self.wins = 0
+        self.losses = 0
+        self.draws = 0
+    
+    @property
+    def win_rate(self):
+        total_games = self.wins + self.losses + self.draws
+        return (self.wins / total_games) * 100 if total_games > 0 else 0
 
 # 게임보드 초기화
 def initialize_board(num_players):
@@ -117,8 +133,10 @@ def determine_random_order(num_players):
     random.shuffle(players)
     return players
 
-# 플레이어의 돌이 모두 사라졌는지 확인
-def has_no_stones(board, color):
+# 플레이어의 돌이 모두 사라졌는지 확인 (4명일 때만 기능함)
+def has_no_stones(board, color, num_players):
+    if num_players == 2:
+        return False  # 2명일 때는 돌이 사라져도 기능 적용 안함
     for row in board:
         if color in row:
             return False
@@ -137,30 +155,39 @@ def place_black_stone(board):
                             return
 
 # 승자 계산
-def calculate_winner(board, player_colors):
-    scores = {color: 0 for color in player_colors}
+def calculate_winner(board, players):
+    scores = {player.color: 0 for player in players}
     for row in board:
         for stone in row:
             if stone in scores:
                 scores[stone] += 1
 
     # 돌이 모두 사라진 플레이어는 승자 계산에서 제외
-    for color in list(scores.keys()):
-        if scores[color] == 0:
-            del scores[color]
+    for player in players:
+        if scores[player.color] == 0:
+            continue  # 해당 플레이어는 계산에서 제외
 
     # 최고 점수를 가진 플레이어가 승리
-    winner = max(scores, key=scores.get)
-    return winner, scores[winner]
+    winner_color = max(scores, key=scores.get)
+    for player in players:
+        if player.color == winner_color:
+            return player, scores[winner_color]
 
-# 모든 플레이어가 놓을 수 없으면 패스 처리
-def all_players_passed(board, player_colors):
-    for color in player_colors:
-        for row in range(board_size):
-            for col in range(board_size):
-                if is_valid_move(board, row, col, color):
-                    return False
-    return True
+# 플레이어 승률과 전적 정렬하여 출력
+def display_player_stats(players):
+    sorted_players = sorted(players, key=lambda p: p.wins, reverse=True)
+    for player in sorted_players:
+        print(f"{player.name} - 승리: {player.wins}, 패배: {player.losses}, 무승부: {player.draws}, 승률: {player.win_rate:.2f}%")
+
+# 게임 기록을 sav.csv에 저장
+def save_game_results(players):
+    file_exists = os.path.isfile('sav.csv')
+    with open('sav.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["이름", "승리", "패배", "무승부", "승률"])
+        for player in players:
+            writer.writerow([player.name, player.wins, player.losses, player.draws, player.win_rate])
 
 # 게임 리스타트
 def restart_game():
@@ -172,13 +199,19 @@ def main():
     while num_players not in [2, 4]:
         num_players = int(input("플레이어 수를 입력하세요 (2명 또는 4명만 가능): "))
     
-    player_colors = 'RGBY'[:num_players]
+    # 플레이어 이름 설정
+    players = []
+    for i in range(num_players):
+        name = input(f"플레이어 {i + 1} 이름을 입력하세요: ")
+        color = 'RGBY'[i]
+        players.append(Player(name, color))
     
     # 게임보드 초기화
     board = initialize_board(num_players)
     
     # 랜덤한 순서로 시작
-    player_order = determine_random_order(num_players)
+    player_order = determine_random_order
+(num_players)
     current_player_idx = 0
     current_color = player_colors[player_order[current_player_idx]]  # 첫 번째 플레이어
 
