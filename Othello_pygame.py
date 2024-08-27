@@ -210,8 +210,7 @@ def main():
     board = initialize_board(num_players)
     
     # 랜덤한 순서로 시작
-    player_order = determine_random_order
-(num_players)
+    player_order = determine_random_order(num_players)
     current_player_idx = 0
     current_color = player_colors[player_order[current_player_idx]]  # 첫 번째 플레이어
 
