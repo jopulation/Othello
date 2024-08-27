@@ -12,6 +12,7 @@ class OthelloGame:
         self.players = []
         self.board_size = 8
         self.board = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
+        self.directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
 
     def show_menu(self):
         print("1. 게임을 시작한다.")
@@ -69,23 +70,69 @@ class OthelloGame:
         print(f"{winner.name} ({winner.color})이 승리했습니다!")
 
     def is_valid_move(self, row, col, color):
-        # 간단한 유효성 검사 (빈 칸에 놓을 수 있는지 확인)
+        # 빈 칸이어야 하고, 돌을 뒤집을 수 있는 방향이 있어야 함
         if self.board[row][col] != ' ':
             return False
-        # 추가로 돌을 뒤집을 수 있는지 확인하는 로직 필요
-        return True
+        
+        for direction in self.directions:
+            if self.can_flip(row, col, direction, color):
+                return True
+        return False
+
+    def can_flip(self, row, col, direction, color):
+        dx, dy = direction
+        x, y = row + dx, col + dy
+        opponent_color = 'B' if color == 'W' else 'W'
+        
+        has_opponent_stone = False
+        
+        while 0 <= x < self.board_size and 0 <= y < self.board_size:
+            if self.board[x][y] == opponent_color:
+                has_opponent_stone = True
+                x += dx
+                y += dy
+            elif self.board[x][y] == color:
+                return has_opponent_stone
+            else:
+                break
+        
+        return False
 
     def place_stone(self, row, col, color):
         self.board[row][col] = color
-        # 돌 뒤집는 로직 추가 필요
+        for direction in self.directions:
+            if self.can_flip(row, col, direction, color):
+                self.flip_stones(row, col, direction, color)
+
+    def flip_stones(self, row, col, direction, color):
+        dx, dy = direction
+        x, y = row + dx, col + dy
+        opponent_color = 'B' if color == 'W' else 'W'
+        
+        while self.board[x][y] == opponent_color:
+            self.board[x][y] = color
+            x += dx
+            y += dy
 
     def is_game_over(self):
-        # 게임이 끝났는지 확인하는 로직 필요
-        return False
+        # 보드에 빈칸이 없거나, 모든 플레이어가 더 이상 유효한 움직임을 할 수 없을 때 게임 종료
+        for row in range(self.board_size):
+            for col in range(self.board_size):
+                for player in self.players:
+                    if self.is_valid_move(row, col, player.color):
+                        return False
+        return True
 
     def calculate_winner(self):
-        # 승자를 결정하는 로직 구현 (예시로 첫 번째 플레이어 승리)
-        return self.players[0]
+        black_count = sum(row.count('B') for row in self.board)
+        white_count = sum(row.count('W') for row in self.board)
+        
+        if black_count > white_count:
+            return self.players[1]  # 검정색 플레이어가 승리
+        elif white_count > black_count:
+            return self.players[0]  # 흰색 플레이어가 승리
+        else:
+            return None  # 무승부
 
     def save_results(self):
         file_exists = os.path.isfile('sav.csv')
