@@ -1,11 +1,55 @@
 ﻿
+<바뀐점>
+int row, col 입력 // 1 <= row, col <= 9
+void moving(row, col, gameBoard) // 돌을 뒤집어주는 기능
+play() // 오셀로를 플레이 하는 전체적인 기능
+가로열 출력 바꾸기 // X 1 2 ... 9
+areaCheck() // 1 <= row, col <= 9 영역인지 확인
+void colorchange(color) { // 돌 색깔 바꾸기
+ if(color == '○')
+ color = '●'
+ else
+ color == '○'
+}
+turn 삭제
+offset[8] = { (-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1) } // 8방향
+imposBoard() // 8방향을 이용하여 돌을 놓을 수 없는지 확인
+play(gameBoard, count, color) {
+ int row = -1, col = -1
+ while(!gameOver(count)) {
+ if(imposBoard(gameBoard, color) { // 놓을 수 없는 상황
+ color = colorchang(color)
+ continue // while문으로 점프
+ }
+ else { // 놓을 수 있는 상황
+ boardprint(gameBoard) // 현재 게임보드 출력
+ print("놓을 곳을 선택하세요 예시: 1, 8")
+ input = row, col
+ while(areaCheck(row, col) || boardEmpty[row][col] || (3)) { // 잘못 놓았을 때
+ print("놓을 수 없는 곳 입니다. 다시 선택해주세요")
+ input = row, col
+ }
+ moving(row, col, gameBoard) // 잘 놓았을 때
+ }
+ }
+}
+놓을 수 없는 상황 -> imposBoard
+놓을 수 있는 상황
+• 잘못 놓았을 때
+• 1. row, col이 영역밖에 있을 때 -> areaCheck
+• 2. 자리가 비어있지 않을 때 -> boardEmpty
+• 3. 선택한 영역에 이웃한 돌이 있지 않을 때
+잘 놓았을 때
+• moving 실행
+
+
 count 구조체 {
  int cnt = 4 // 전체 돌의 개수 4 <= cnt <= 64
  int blCnt = 2 // 검은돌의 개수 0 <= blCnt <= 64
  int whCnt = 2 // 흰돌의 개수 0 <= whCnt <= 64
 }
 int turn = 0 // 턴 시작 전
-char color = '\0' // '○' or '●'
+char color = '●' // '○' or '●', 처음은 무조건 검은돌
 char gameBoard[10][10] // '○' or '●'
 for i in range(0:10) {
  for j in range(0:10) {
@@ -57,21 +101,22 @@ boardPrint(gameBoard) { // 게임보드 출력
  print(" ")
  print(i)
  }
- // 가로 열 출력 1 2 3 4 5 6 7 8
+ print("X 1 2 3 4 5 6 7 8\n") // 직관적으로
+ // 가로 열 출력 X 1 2 3 4 5 6 7 8
  print("\n")
  for i in range(1:9) {
  print(i)
- // 가로 열 출력 1 2 3 4 5 6 7 8
+ // 세로 열 출력 1 2 3 4 5 6 7 8
  for j in range(1:9) {
  print(" ")
  gameBoard[i][j]
  }
  print("\n")
+ }
 }
 play(gameBoard, cnt, color) { // 가장 중요한 기능. 돌을 놓은 후에 색이 바뀌는 기능.
  boardPrint(gameBoard)
  print("놓을 곳을 입력하세요. 예시: 1, 2\n")
- 
  print("해당 영역에는 돌을 놓을 수 없습니다.\n") // 다시 둘 수 있게 돌아가기
 }
 <main>
@@ -82,6 +127,7 @@ while(!gameOver(count)) { // 게임 끝날 때까지 반복
  if(imposBoard(gameBoard, color)){ // 해당 색의 돌이 자리에 둘 수 없으면 턴만 넘어감.
  break
  }
- play() // 실질적 기능.
+ play(gameBoard, cnt, color) // 실질적 기능.
 }
-resultPrint(count)﻿
+resultPrint(count)
+﻿
