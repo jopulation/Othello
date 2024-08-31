@@ -1,23 +1,33 @@
-﻿<바뀐점>
+﻿
+<바뀐점>
 int row, col 입력 // 1 <= row, col <= 9
+
 void moving(row, col, gameBoard) // 돌을 뒤집어주는 기능
+
 play() // 오셀로를 플레이 하는 전체적인 기능
+
 가로열 출력 바꾸기 // X 1 2 ... 9
+
 boolean areaCheck() { // 1 <= row, col <= 9 영역인지 확인
  if(1 <= row, col <= 9)
  return true // 영역 안에 있는 경우 true
  else
  return false // 영역 안에 없는 경우 false
 }
+
 void colorChange(color) { // 돌 색깔 바꾸기
  if(color == '○')
  color = '●'
  else
  color == '○'
 }
+
 turn 삭제
+
 offset[8] = { (-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1) } // 8방향
+
 imposBoard() // 8방향을 이용하여 돌을 놓을 수 없는지 확인
+
 [main]
 print("<Othello Game>\n")
 boardprint(gameBoard) // 현재 게임보드 처음에 출력
@@ -32,6 +42,7 @@ play(gameBoard, count, color) {
  else { // 놓을 수 있는 상황
  print("놓을 곳을 선택하세요 예시: 1, 8 -> ")
  input = row, col
+
  while(!areaCheck(row, col) || !boardEmpty[row][col] || (3)) { // 잘못 놓았을 때
  print("놓을 수 없는 곳 입니다. 다시 선택해주세요 -> ")
  input = row, col
@@ -42,6 +53,8 @@ play(gameBoard, count, color) {
  }
 }
 resultPrint(count)
+
+
 놓을 수 없는 상황 -> imposBoard
 놓을 수 있는 상황
 • 잘못 놓았을 때
@@ -50,24 +63,27 @@ resultPrint(count)
 • 3. 선택한 영역에 이웃한 돌이 있지 않을 때 -> !(3)
 잘 놓았을 때
 • moving 실행
-
-
+﻿
+﻿
 count 구조체 {
  int cnt = 4 // 전체 돌의 개수 4 <= cnt <= 64
  int blCnt = 2 // 검은돌의 개수 0 <= blCnt <= 64
  int whCnt = 2 // 흰돌의 개수 0 <= whCnt <= 64
-}
-int turn = 0 // 턴 시작 전
+}﻿
+
 char color = '●' // '○' or '●', 처음은 무조건 검은돌
+
 char gameBoard[10][10] // '○' or '●'
 for i in range(0:10) {
  for j in range(0:10) {
  gameBoard[i][j] = '\0' // 널문자로 초기화 해놓자.
  }
 }
+
 gameBoard[4][4] = gameBoard[5][5] = '●'
 gameBoard[4][5] = gameBoard[5][4] = '○'
 // 게임보드 초기 상태
+
 boolean boardEmpty[10][10] // 보드에 빈 자리가 있는지 확인
 for i in range(0:10) {
  for j in range(0:10) {
@@ -82,21 +98,18 @@ for i in range(0:10) {
  boardEmpty[i][9] = false
 }
 // 가운데 및 가장자리 4개는 비어있지 않은 것(false)으로 초기화
+
 int gameOver(count) { // 게임이 끝났는지 확인하는 함수
  if(cnt = 64 || blCnt == 0 || WhCnt == 0)
  return 1
  else
  return 0
 }
+
 int imposBoard(gameBoard, color) // 해당하는 돌이 자리에 둘 수 있는지 확인 하는 함수
-// 둘 수 없으면 스킵.
-char stoneColor(turn) {
- if(turn/2 = 0) // 짝수면 검은돌
- return '●'
- else
- return '○' // 홀수면 흰돌
-}
-// 놓을 자리가 없어서 턴이 넘어가도 턴을 소비한 것으로 생각.
+// 둘 수 없으면 스킵.﻿
+
+﻿
 void resultPrint(count) { // 게임 결과 출력
  if(blCnt > whCnt)
  print("WINNER : BLACK!")
@@ -104,15 +117,13 @@ void resultPrint(count) { // 게임 결과 출력
  print("WINNER : WHITE!")
  else
  print("DRAW!)
-}
-boardPrint(gameBoard) { // 게임보드 출력
- for i in range(1:9) {
- print(" ")
- print(i)
- }
+}﻿
+
+﻿boardPrint(gameBoard) { // 게임보드 출력
+﻿
  print("X 1 2 3 4 5 6 7 8\n") // 직관적으로
- // 가로 열 출력 X 1 2 3 4 5 6 7 8
- print("\n")
+ // 가로 열 출력 X 1 2 3 4 5 6 7 8﻿
+﻿
  for i in range(1:9) {
  print(i)
  // 세로 열 출력 1 2 3 4 5 6 7 8
@@ -123,27 +134,20 @@ boardPrint(gameBoard) { // 게임보드 출력
  print("\n")
  }
 }
-play(gameBoard, cnt, color) { // 가장 중요한 기능. 돌을 놓은 후에 색이 바뀌는 기능.
- boardPrint(gameBoard)
- print("놓을 곳을 입력하세요. 예시: 1, 2\n")
- print("해당 영역에는 돌을 놓을 수 없습니다.\n") // 다시 둘 수 있게 돌아가기
-}
-<main>
-print("Othello Game\n")
-화면을 통해 게임을 할 수 있는 기능 필요 - > boardprint
-while(!gameOver(count)) { // 게임 끝날 때까지 반복
- color = stoneColor(++turn) // 1턴 지남.
- if(imposBoard(gameBoard, color)){ // 해당 색의 돌이 자리에 둘 수 없으면 턴만 넘어감.
- break
- }
- play(gameBoard, cnt, color) // 실질적 기능.
-}
--> 요건 다 위에 play로 교체
-resultPrint(count)
 
 
-앞으로 해야할 것
+<앞으로 해야할 것>
 • 잘못 놓았을 때의 (3)경우가 어떤지 찾아보기
+• 상대돌 근처 8방향에 빈 자리가 존재하는지
+• 그 빈자리의 반대방향을 계속 따라갔을 때 자신의 돌이 있어야 됨.
+• // 반대방향은 10 - offset의 순서에서 예시) 첫번째 순서인 (-1, -1)인 경우 9번째인 (1, 1)
+• 상대방의 돌은 연속해도 되고. 그 다음 나오는 돌이 자신의 돌일 때.
+• // 아무것도 없으면 안 됨. -> boardEmpty
 • boardPrint 화면 고정으로 구현
+• gotoxy함수 이용
 • moving 구현
+• gotoxy 함수 및 sleep을 이용하여 돌 바뀌는 애니메이션 구현
+• cls를 이용해 화면 지우기 가능.
+• 근데 이거 c 기준인데 파이썬은 찾아봐야할듯
+﻿
 ﻿
