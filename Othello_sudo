@@ -1,11 +1,15 @@
-﻿
-<바뀐점>
+﻿<바뀐점>
 int row, col 입력 // 1 <= row, col <= 9
 void moving(row, col, gameBoard) // 돌을 뒤집어주는 기능
 play() // 오셀로를 플레이 하는 전체적인 기능
 가로열 출력 바꾸기 // X 1 2 ... 9
-areaCheck() // 1 <= row, col <= 9 영역인지 확인
-void colorchange(color) { // 돌 색깔 바꾸기
+boolean areaCheck() { // 1 <= row, col <= 9 영역인지 확인
+ if(1 <= row, col <= 9)
+ return true // 영역 안에 있는 경우 true
+ else
+ return false // 영역 안에 없는 경우 false
+}
+void colorChange(color) { // 돌 색깔 바꾸기
  if(color == '○')
  color = '●'
  else
@@ -14,31 +18,36 @@ void colorchange(color) { // 돌 색깔 바꾸기
 turn 삭제
 offset[8] = { (-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1) } // 8방향
 imposBoard() // 8방향을 이용하여 돌을 놓을 수 없는지 확인
+[main]
+print("<Othello Game>\n")
+boardprint(gameBoard) // 현재 게임보드 처음에 출력
 play(gameBoard, count, color) {
  int row = -1, col = -1
- while(!gameOver(count)) {
+ while(!gameOver(count)) { // 게임이 끝나지 않는 경우
  if(imposBoard(gameBoard, color) { // 놓을 수 없는 상황
- color = colorchang(color)
+ print(color + "은 놓을 수 있는 곳이 없습니다.\n")
+ color = colorChange(color)
  continue // while문으로 점프
  }
  else { // 놓을 수 있는 상황
- boardprint(gameBoard) // 현재 게임보드 출력
- print("놓을 곳을 선택하세요 예시: 1, 8")
+ print("놓을 곳을 선택하세요 예시: 1, 8 -> ")
  input = row, col
- while(areaCheck(row, col) || boardEmpty[row][col] || (3)) { // 잘못 놓았을 때
- print("놓을 수 없는 곳 입니다. 다시 선택해주세요")
+ while(!areaCheck(row, col) || !boardEmpty[row][col] || (3)) { // 잘못 놓았을 때
+ print("놓을 수 없는 곳 입니다. 다시 선택해주세요 -> ")
  input = row, col
  }
  moving(row, col, gameBoard) // 잘 놓았을 때
+ boardprint(gameBoard) // 현재 게임보드 출력
  }
  }
 }
+resultPrint(count)
 놓을 수 없는 상황 -> imposBoard
 놓을 수 있는 상황
 • 잘못 놓았을 때
-• 1. row, col이 영역밖에 있을 때 -> areaCheck
-• 2. 자리가 비어있지 않을 때 -> boardEmpty
-• 3. 선택한 영역에 이웃한 돌이 있지 않을 때
+• 1. row, col이 영역밖에 있을 때 -> !areaCheck
+• 2. 자리가 비어있지 않을 때 -> !boardEmpty
+• 3. 선택한 영역에 이웃한 돌이 있지 않을 때 -> !(3)
 잘 놓았을 때
 • moving 실행
 
@@ -121,7 +130,7 @@ play(gameBoard, cnt, color) { // 가장 중요한 기능. 돌을 놓은 후에 �
 }
 <main>
 print("Othello Game\n")
-화면을 통해 게임을 할 수 있는 기능 필요
+화면을 통해 게임을 할 수 있는 기능 필요 - > boardprint
 while(!gameOver(count)) { // 게임 끝날 때까지 반복
  color = stoneColor(++turn) // 1턴 지남.
  if(imposBoard(gameBoard, color)){ // 해당 색의 돌이 자리에 둘 수 없으면 턴만 넘어감.
@@ -129,5 +138,12 @@ while(!gameOver(count)) { // 게임 끝날 때까지 반복
  }
  play(gameBoard, cnt, color) // 실질적 기능.
 }
+-> 요건 다 위에 play로 교체
 resultPrint(count)
+
+
+앞으로 해야할 것
+• 잘못 놓았을 때의 (3)경우가 어떤지 찾아보기
+• boardPrint 화면 고정으로 구현
+• moving 구현
 ﻿
