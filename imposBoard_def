@@ -1,0 +1,35 @@
+int[] offset[8] = { (-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1) }
+
+
+def imposBoard(gameBoard, color):
+    int i = 0
+    int j = 0
+    int k = 0
+    char opp_color = colorChange(color)
+    char pr_color
+
+    for i in range(1:9) {
+        for j in range(1:9) {
+            if(color == gameBoard[i][j]) {
+                row = i
+                col = j
+
+                for k in range(0:8) {
+                    pr_color = gameBoard[row + offset[k][0]][col + offset[k][1]]
+                    if (opp_color ==  gameBoard[row + pr_color) {
+                        while(pr_color == '\0') {
+                            if(pr_color == color) {
+                                break
+                            }
+                            # 현재 위치가 가장자리면 break, 그게 아니라면(자리가 있다면) return 0;
+                        }
+
+                    }
+
+                } 
+            }
+
+        }
+    }
+    return 1;
+
