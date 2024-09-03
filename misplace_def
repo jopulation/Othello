@@ -1,0 +1,34 @@
+str colorChange(str color)
+bool areaCheck(int row, int col) # 영역밖에 있는 경우
+bool boardEmpty(int row, int col) # 비어있는지 확인
+
+def misPlace(gameBoars[][], str color, int row, int col):
+    if(!areaCheck(row, col) || !boardEmpty(row, col)):
+        return 1
+        #  영역밖에 있거나 비어있지 않은 경우
+        
+    int roww, coll, k
+    str oppColor
+    
+    if(color == '○') {
+        oppColor = '●'
+    }
+    else
+        oppColor = '○'
+
+    k = 0
+    for k in range(0:8):
+        roww = k + offset[k][0]
+        coll = k + offset[k][1]
+        
+        if (oppcolor ==  gameBoard[row][col]):
+            while(!(gameBoard[row][col] == color)) { # 자신과 같은 색의 돌일 때
+                row += offset[k][0]
+                col += offset[k][1]
+                if(gameBoard[row][col] == '\0') { # 가장자리이거나 빈자리이면 안 됨
+                    break
+                }
+            }
+            return 0
+            # 자신과 같은 색의 돌일 때
+    return 1
