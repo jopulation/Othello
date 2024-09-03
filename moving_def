@@ -1,0 +1,44 @@
+def moving(gameBoard, color, row, col):
+    int offCnt[9] = { 0, }
+    int sum = 0
+    int k = 0
+    int cnt = 0
+    int roww, coll
+    
+    str oppColor
+    
+    if(color == '○') {
+        oppColor = '●'
+    }
+    else
+        oppColor = '○'
+
+    for k in range(0:8):
+        roww = k + offset[k][0]
+        coll = k + offset[k][1]
+        cnt = 1
+        if (oppcolor ==  gameBoard[row][col]):
+            while(!(gameBoard[row][col] == color)) { # 자신과 같은 색의 돌일 때
+                row += offset[k][0]
+                col += offset[k][1]
+                cnt++
+                if(gameBoard[row][col] == '\0') { # 가장자리이거나 빈자리이면 안 됨
+                    break
+                }
+            }
+        offCnt[k] = cnt;
+        sum += cnt
+        # 자신과 같은 색의 돌일 때
+    
+    while(sum > 0) {
+        for k in range(0:7) { # 최대 7번까지 연속으로 뒤집을 수 있기 때문
+            if(offCnt[k] > 0) {
+                gameBoard[row + k*offset[i][0]][col + k*offset[i][0]] = color
+                offCnt[k]--
+                sum--
+            }
+        }
+        boardPrint(gameBoard)
+        sleep(0.3) # 0.3초 단위로 뒤집기
+    }
+
