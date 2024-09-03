@@ -5,8 +5,14 @@ def imposBoard(gameBoard, color):
     int i = 0
     int j = 0
     int k = 0
-    char opp_color = colorChange(color)
-    char pr_color
+    str oppColor # 나와 반대되는 돌의 색
+    str prColor # 현재 돌의 색
+
+    if(color == '○') {
+        oppColor = '●'
+    }
+    else
+        oppColor = '○'
 
     for i in range(1:9) {
         for j in range(1:9) {
@@ -15,15 +21,24 @@ def imposBoard(gameBoard, color):
                 col = j
 
                 for k in range(0:8) {
-                    pr_color = gameBoard[row + offset[k][0]][col + offset[k][1]]
-                    if (opp_color ==  gameBoard[row + pr_color) {
-                        while(pr_color == '\0') {
-                            if(pr_color == color) {
+                    row = i + offset[k][0]
+                    col = j + offset[k][1]
+
+                    if (oppColor ==  gameBoard[row][col]) {
+                        while(!(gameBoard[row][col] == '\0')) { # 가장자리이거나 빈자리이거나
+                            row += offset[k][0]
+                            col += offset[k][1]
+
+                            if(gameBoard[row][col] == color) { # 자신과 같은 색의 돌이면 안 됨
                                 break
                             }
-                            # 현재 위치가 가장자리면 break, 그게 아니라면(자리가 있다면) return 0;
                         }
-
+                        if(row == 0 || row == 9 || col == 0 || col == 9) {
+                            break
+                            # 가장자리일 때
+                        }
+                        return 0;
+                        # 빈자리가 있을 때
                     }
 
                 } 
@@ -32,4 +47,3 @@ def imposBoard(gameBoard, color):
         }
     }
     return 1;
-
