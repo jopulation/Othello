@@ -1,5 +1,5 @@
 import time
-offset =  [ (-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1) ]
+offset =  [ [-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1] ]
 
 
 def boardPrint(gameBoard):
@@ -37,27 +37,27 @@ def imposBoard(gameBoard, color):
                     coll = j + offset[k][1]
 
                     if oppcolor == gameBoard[roww][coll]:
-                        while not gameBoard[roww][coll] == '\0': # 가장자리이거나 빈자리이거나
+                        while not gameBoard[roww][coll] == ' ': # 가장자리이거나 빈자리이거나
                             roww += offset[k][0]
                             coll += offset[k][1]
 
                             if gameBoard[roww][coll] == color: # 자신과 같은 색의 돌이면 안 됨
                                 break
                         if roww == 0 or roww == 9 or coll == 0 or coll == 9:
-                            break #가장자리가일 때
+                            break #가장자리일 때
                         return 0 # 놓을 수 있는 빈자리가 있을 때
     return 1
 
 
 def areaCheck(row, col):
-    if (1 <= row, col <= 9):
+    if (1 <= row <=9) and (1 <= col <= 9):
         return 1 # 영역 안에 있을 때
     else:
         return 0 # 영역 밖에 있을 때
     
 
 def misPlace(gameBoard, color, row, col):
-    if (not areaCheck(row, col)) or (not gameBoard[row][col] == '\0'):
+    if (not areaCheck(row, col)) or (not gameBoard[row][col] == ' '):
     # 영역 밖에 있거나 빈자리
         return 1
     
@@ -73,7 +73,7 @@ def misPlace(gameBoard, color, row, col):
                 roww += offset[i][0]
                 coll += offset[i][1]
                 
-                if gameBoard[roww][coll] == '\0': # 가장자리이거나 빈자리이면 안 됨
+                if gameBoard[roww][coll] == ' ': # 가장자리이거나 빈자리이면 안 됨
                     continue
             return 0 # 자신과 같은 색의 돌일 때
     return 1 # 다 해보고도  안 되었을 때
@@ -96,7 +96,7 @@ def moving(gameBoard, color, row, col, cnt):
                 coll += offset[i][1]
                 ++count
 
-                if gameBoard[roww][coll] == '\0': # 가장자리이거나 빈자리면 안 됨
+                if gameBoard[roww][coll] == ' ': # 가장자리이거나 빈자리면 안 됨
                     break
         offCnt[i] = count
         sum += count
