@@ -2,7 +2,7 @@ import defs
 
 # gameBoard[row][col]
 # 게임보드 초기상태
-gameBoard = [['\0']*10 for i in range(10)]
+gameBoard = [[' ']*10 for i in range(10)]
 gameBoard[4][4] = gameBoard[5][5] = '●'
 gameBoard[4][5] = gameBoard[5][4] = '○'
 
@@ -27,8 +27,8 @@ while not defs.gameOver(cnt):
         row, col = map(int, input("놓을 곳을 입력하세요. 예시: 1 8 ->").split())
         # 숫자가 아닌 경우 에외처리(필요)
 
-        while not defs.misPlace(gameBoard, color, row, col):
-            row, col = map(int, input("놓을 수 없는 곳입니다.\n다시 입력해주세요. 예시: 1 8 ->", end = "").split())
+        while defs.misPlace(gameBoard, color, row, col):
+            row, col = map(int, input("놓을 수 없는 곳입니다.\n다시 입력해주세요. 예시: 1 8 ->").split())
     
         defs.moving(gameBoard, color, row, col, cnt)
 
