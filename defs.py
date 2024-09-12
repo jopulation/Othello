@@ -10,6 +10,7 @@ def boardPrint(gameBoard):
         for j in range(1, 9):
             print(" " + gameBoard[j][i], end="")
         print()
+    time.sleep(0.5)
 
 def gameOver(cnt):
     if(cnt[0] == 64 or cnt[1] == 0 or cnt[2] == 0):
@@ -50,7 +51,7 @@ def imposBoard(gameBoard, color):
 
 
 def areaCheck(row, col):
-    if (1 <= row <=9) and (1 <= col <= 9):
+    if (1 <= row <= 9) and (1 <= col <= 9):
         return 1 # 영역 안에 있을 때
     else:
         return 0 # 영역 밖에 있을 때
@@ -62,42 +63,41 @@ def misPlace(gameBoard, color, row, col):
         return 1
     
     oppColor = colorchange(color)
-    roww = coll = -1 # 초기화
 
     for i in range(0,8):
         roww = row + offset[i][0]
         coll = col + offset[i][1]
 
-        if oppColor == gameBoard[roww][coll]:
-            while not gameBoard[roww][coll] == color: # 자신과 같은 돌일 때
-                roww += offset[i][0]
-                coll += offset[i][1]
+        while gameBoard[roww][coll] == oppColor:
+            roww += offset[i][0]
+            coll += offset[i][1]
                 
-                if gameBoard[roww][coll] == ' ': # 가장자리이거나 빈자리이면 안 됨
-                    continue
-            return 0 # 자신과 같은 색의 돌일 때
-    return 1 # 다 해보고도  안 되었을 때
+        if gameBoard[roww][coll] == color: # 상대돌이 끝나고 자신이 돌이 나올 때
+            return 0
+        
+    return 1 # 다 해보고도 안 되었을 때
 
 def moving(gameBoard, color, row, col, cnt):
-    offCnt = [0 for i in range(8)]
+    offCnt = [ 0, 0, 0, 0, 0, 0, 0, 0] # offCnt = [0 for i in range(8)]
     count = 0
     sum = 0
     roww = coll = -1
     oppColor = colorchange(color)
+    gameBoard[row][col] = color
 
     for i in range(0, 8):
         roww = i + offset[i][0]
         coll = i + offset[i][1]
-        count = 1
+        count = 0
 
-        if oppColor == gameBoard[roww][coll]:
-            while not  gameBoard[roww][coll] == color:
-                roww += offset[i][0]
-                coll += offset[i][1]
-                ++count
-
-                if gameBoard[roww][coll] == ' ': # 가장자리이거나 빈자리면 안 됨
-                    break
+        while gameBoard[roww][coll] == oppColor: # offset 위치에 상대돌이 존재할 때
+            roww += offset[i][0]
+            coll += offset[i][1]
+            ++count
+                
+        if gameBoard[roww][coll] == ' ': # 가장자리이거나 빈자리면 안 됨
+            count = 0
+        
         offCnt[i] = count
         sum += count
         # 자신과 같은 색의 돌일 때
@@ -110,6 +110,8 @@ def moving(gameBoard, color, row, col, cnt):
         cnt[2] += sum
         cnt[1] -= sum
 
+    boardPrint(gameBoard) # 돌 놓은 위치부터 시작.
+
     while sum > 0:
         for i in range(1, 8): # 최대 7번까지 연속으로 뒤집을 수 있기 때문
             for j in range(0, 8):
@@ -118,12 +120,6 @@ def moving(gameBoard, color, row, col, cnt):
                     --offCnt[j]
                     --sum
             boardPrint(gameBoard)
-            time.sleep(1)
-
-
-
-
-
 
 def resultPrint(cnt):
     if cnt[1] > cnt[2]:
