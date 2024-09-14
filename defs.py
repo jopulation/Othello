@@ -121,9 +121,9 @@ def moving(gameBoard, color, row, col, cnt, N):
 
 def resultPrint(cnt):
     if cnt[1] > cnt[2]:
-        print("●:", cnt[1], "\n○:", cnt[2], "\nWINNNER : BLACK!")
+        print("\n●:", cnt[1], "\n○:", cnt[2], "\nWINNNER : BLACK!")
     elif cnt[1] < cnt[2]:
-        print("●:", cnt[1], "\n○:", cnt[2], "\nWINNNER : WHITE!")
+        print("\n●:", cnt[1], "\n○:", cnt[2], "\nWINNNER : WHITE!")
     else:
-        print("●:", cnt[1], "\n○:", cnt[2], "\nDRAW!")
+        print("\n●:", cnt[1], "\n○:", cnt[2], "\nDRAW!")
         
