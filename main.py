@@ -6,11 +6,19 @@ color = '●' # 검은돌로 시작
 imp = 0 # 양쪽 다 놓을 수 없는 경우를 찾기 위한 변수
 
 #Othello Game
-while not ( N%2 == 0 ) and ( N > 0 ) :
+defs.os.system('clear')
+
+while True:
     try:
-        N = int(input("보드판의 크기(짝수)를 입력하세요->"))
+        N = int(input("보드판의 크기를 입력해주세요->"))
+        while not ( N%2 == 0 ) and ( N > 0 ):
+            N = int(input("보드판의 크기는 짝수인 자연수 입니다.\n크기를 다시 입력해주세요->"))
+            defs.os.system('clear')
+        break
     except:
         print("입력이 정확하지 않습니다.")
+        defs.time.sleep(0.5)
+        defs.os.system('clear')
 
 # gameBoard[row][col]
 # 게임보드 초기상태
@@ -32,7 +40,7 @@ while not defs.gameOver(cnt, imp, N):
         imp += 1
         print(color + "은 놓을 수 있는 곳이 없습니다.")
         color = defs.colorChange(color)
-        defs.time.sleep(1)
+        defs.time.sleep(0.5)
 
     else: # 놓을 수 있는 경우
         imp = 0
@@ -47,7 +55,7 @@ while not defs.gameOver(cnt, imp, N):
                 break
             except: # 입력값 예외처리
                 print('입력이 정확하지 않습니다.')
-                defs.time.sleep(1)
+                defs.time.sleep(0.5)
 
         defs.moving(gameBoard, color, row, col, cnt, N)
         color = defs.colorChange(color) # 턴 마치고 색 바꾸기
