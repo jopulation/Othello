@@ -14,7 +14,7 @@ def boardPrint(gameBoard):
         for j in range(1, 9):
             print(" " + gameBoard[j][i], end="")
         print()
-    time.sleep(0.5)
+    time.sleep(0.3)
 
 def gameOver(cnt):
     if(cnt[0] == 64 or cnt[1] == 0 or cnt[2] == 0):
@@ -117,8 +117,8 @@ def moving(gameBoard, color, row, col, cnt):
 
 def resultPrint(cnt):
     if cnt[1] > cnt[2]:
-        print("WINNNER : BLACK!", end ="")
+        print("WINNNER : BLACK!")
     elif cnt[1] < cnt[2]:
-        print("WINNNER : WHITE!", end ="")
+        print("WINNNER : WHITE!")
     else:
-        print("DRAW!", end="")
+        print("DRAW!")
