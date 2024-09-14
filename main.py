@@ -24,20 +24,13 @@ while not defs.gameOver(cnt):
         while True:
             try:
                 row, col = map(int, input(color + "차례>\n놓을 곳을 입력해주세요->").split())
-                # 숫자가 아닌 경우 예외처리(필요)
-                break
-            except:
-                print('입력이 정확하지 않습니다.')
-
-        # 잘못 놓았을 경우
-        while True:
-            try:
-                while defs.misPlace(gameBoard, color, row, col):
+                
+                while defs.misPlace(gameBoard, color, row, col): # 잘못 놓았을 경우
                     row, col = map(int, input("놓을 수 없는 곳입니다.\n다시 입력해주세요. 예시: 1 8 ->").split())
                 break
-            except:
+            except: # 입력값 예외처리
                 print('입력이 정확하지 않습니다.')
-
+                
         defs.moving(gameBoard, color, row, col, cnt)
         color = defs.colorChange(color) # 턴 마치고 색 바꾸기
 
