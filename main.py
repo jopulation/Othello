@@ -1,7 +1,17 @@
 import defs
 
 # N*N 형태의 보드판, N은 짝수
-N = 8
+N = 1
+row = col = -1
+color = '●' # 검은돌로 시작
+imp = 0 # 양쪽 다 놓을 수 없는 경우를 찾기 위한 변수
+
+#Othello Game
+while not ( N%2 == 0 ) and ( N > 0 ) :
+    try:
+        N = int(input("보드판의 크기(짝수)를 입력하세요->"))
+    except:
+        print("입력이 정확하지 않습니다.")
 
 # gameBoard[row][col]
 # 게임보드 초기상태
@@ -9,15 +19,11 @@ gameBoard = [['□']*(N+2) for i in range(N+2)]
 gameBoard[N//2][N//2] = gameBoard[N//2+1][N//2+1] = '○'
 gameBoard[N//2][N//2+1] = gameBoard[N//2+1][N//2] = '●'
 
-row = col = -1
 cnt = [ N, N//2, N//2]
 # cnt[0] : 전체 돌의 개수
 # cnt[1] : 검은 돌의 개수
 # cnt[2] : 흰 돌의 개수
-color = '●' # 검은돌로 시작
-imp = 0 # 양쪽 다 놓을 수 없는 경우를 찾기 위한 변수
 
-#Othello Game
 defs.boardPrint(gameBoard, N)
 while not defs.gameOver(cnt, imp, N):
     if defs.imposBoard(gameBoard, color, N): # 놓을 수 없는 경우
